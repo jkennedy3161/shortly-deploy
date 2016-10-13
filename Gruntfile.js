@@ -57,7 +57,7 @@ module.exports = function(grunt) {
           force: true
         },
         files: {
-          src: ['app/*.js', 'server.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','gruntfile.js']
+          src: ['app/*.js', 'server.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','Gruntfile.js']
         }
       }
     },
@@ -75,14 +75,14 @@ module.exports = function(grunt) {
       }
     },
 
-    /*gitpush: {
+    gitpush: {
       your_target: {
         options: {
             remote: 'live',
             branch: 'HEAD:master'
           }
         }
-    },*/
+    },
 
     watch: {
       scripts: {
@@ -149,7 +149,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', function(n){
     if(grunt.option('prod')){
-      grunt.task.run(['gitadd', 'gitcommit']);//,'gitpush']);
+      grunt.task.run(['gitadd', 'gitcommit', 'gitpush']);//,'gitpush']);
     }
   });
 
