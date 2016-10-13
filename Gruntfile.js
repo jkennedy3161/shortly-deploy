@@ -1,10 +1,9 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    concat: {
-    },
 
+    pkg: grunt.file.readJSON('package.json'),
+    
     mochaTest: {
       test: {
         options: {
@@ -14,43 +13,104 @@ module.exports = function(grunt) {
       }
     },
 
-    nodemon: {
-      dev: {
-        script: 'server.js'
-      }
+    eslint: {
+      target: ['app/*.js', 'server.js','server-config.js','tests/*.js','public/client/*.js']
+    },
+
+    concat: {
+
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['public/client/*.js', 'public/lib/*.js'],
+        dest: 'public/dist/client.js',
+      },
+
     },
 
     uglify: {
-    },
-
-    eslint: {
-      target: [
-        // Add list of files to lint here
-      ]
+      my_target: {
+        files: {
+          'public/dist/client.min.js': ['public/dist/client.js']
+          //output first
+        }
+      }
     },
 
     cssmin: {
+      options: {
+        shorthandCompacting: false,
+        roundingPrecision: -1
+      },
+      target: {
+        files: {
+          'public/dist/style.min.css': ['public/style.css']
+          //output first
+        }
+      }
     },
+
+    gitadd: {
+      task: {
+        options: {
+          force: true
+        },
+        files: {
+          src: ['app/*.js', 'server.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','gruntfile.js']
+        }
+      }
+    },
+
+    gitcommit: {
+      task: {
+        options: {
+          message: 'Testing',
+          noVerify: true,
+          noStatus: false
+        },
+        files: {
+           src: ['app/*.js', 'server.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','Gruntfile.js'],
+        }
+      }
+    },
+
+    /*gitpush: {
+      your_target: {
+        options: {
+            remote: 'live',
+            branch: 'HEAD:master'
+          }
+        }
+    },*/
 
     watch: {
       scripts: {
         files: [
+          'app/*.js', 'server.js','server-config.js',
           'public/client/**/*.js',
           'public/lib/**/*.js',
         ],
         tasks: [
+          'mochaTest',
           'concat',
           'uglify'
         ]
       },
-      css: {
+      /*css: {
         files: 'public/*.css',
         tasks: ['cssmin']
-      }
+      }*/
     },
 
     shell: {
       prodServer: {
+      }
+    },
+
+    nodemon: {
+      dev: {
+        script: 'server.js'
       }
     },
   });
@@ -63,6 +123,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-git');
 
   grunt.registerTask('server-dev', function (target) {
     grunt.task.run([ 'nodemon', 'watch' ]);
@@ -72,24 +133,26 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  grunt.registerTask('test', [
-    'mochaTest'
-  ]);
+  grunt.registerTask('test', ['mochaTest']);
 
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('lint', ['eslint']);
 
-  grunt.registerTask('upload', function(n) {
-    if (grunt.option('prod')) {
-      // add your production server task here
-    } else {
-      grunt.task.run([ 'server-dev' ]);
+  grunt.registerTask('build', ['mochaTest','eslint','concat','cssmin','uglify']);
+
+  grunt.registerTask('uploadLive', function(n) {
+    
+  });
+
+   grunt.registerTask('uploadBare', function(n) {
+    
+  });
+
+  grunt.registerTask('deploy', function(n){
+    if(grunt.option('prod')){
+      grunt.task.run(['gitadd', 'gitcommit']);//,'gitpush']);
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your deploy tasks here
-  ]);
 
 
 };
