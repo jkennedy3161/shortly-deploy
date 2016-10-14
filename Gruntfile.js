@@ -67,10 +67,10 @@ module.exports = function(grunt) {
         options: {
           message: 'Testing',
           noVerify: true,
-          noStatus: false
+          noStatus: true
         },
         files: {
-           src: ['app/*.js', 'server.js','lib/*.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','Gruntfile.js'],
+           src: ['app/*.js', 'server.js','lib/*.js','server-config.js','tests/*.js','public/*.js' ,'views/*','package.json','Gruntfile.js','README.md'],
         }
       }
     },
