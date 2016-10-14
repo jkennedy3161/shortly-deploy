@@ -65,7 +65,7 @@ module.exports = function(grunt) {
     gitcommit: {
       task: {
         options: {
-          message: 'Testing',
+          message: 'Deployment Successful and Refactor to MongoDB done!',
           noVerify: true,
           noStatus: true
         },
